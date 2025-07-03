@@ -14,11 +14,11 @@ namespace WebMVC_SWD
 			var builder = WebApplication.CreateBuilder(args);
 
 			builder.Services.AddControllersWithViews();
-            builder.Services.Configure<RazorViewEngineOptions>(options =>
-            {
-                options.ViewLocationFormats.Clear();
-                options.ViewLocationFormats.Add("/Components/{1}/Views/{0}.cshtml");
-            });
+            //builder.Services.Configure<RazorViewEngineOptions>(options =>
+            //{
+            //    options.ViewLocationFormats.Clear();
+            //    options.ViewLocationFormats.Add("/Components/{1}/Views/{0}.cshtml");
+            //});
 
             #region Add Services
             builder.Services.AddDbContext<AccountDBContext>(options =>
