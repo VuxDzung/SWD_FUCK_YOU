@@ -22,14 +22,15 @@ public partial class BookDBContext : DbContext
     public virtual DbSet<BookReview> BookReviews { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-UGQUIT4\\RICHARDVU;Database=BookShopDB;User Id=sa;Password=123;TrustServerCertificate=True;");
-
+    {
+        var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+        optionsBuilder.UseSqlServer(config.GetConnectionString("MyCnn"));
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Book>(entity =>
         {
-            entity.HasKey(e => e.BookId).HasName("PK__Book__8BE5A10DAB936007");
+            entity.HasKey(e => e.BookId).HasName("PK__Book__8BE5A10D8212183A");
 
             entity.ToTable("Book");
 
@@ -42,6 +43,9 @@ public partial class BookDBContext : DbContext
             entity.Property(e => e.Description)
                 .HasColumnType("text")
                 .HasColumnName("description");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("isActive");
             entity.Property(e => e.Isbn)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -62,12 +66,12 @@ public partial class BookDBContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Books)
                 .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK__Book__categoryId__3D5E1FD2");
+                .HasConstraintName("FK__Book__categoryId__3E52440B");
         });
 
         modelBuilder.Entity<BookCategory>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__BookCate__23CAF1D86B7CD357");
+            entity.HasKey(e => e.CategoryId).HasName("PK__BookCate__23CAF1D88520D7FB");
 
             entity.ToTable("BookCategory");
 
@@ -80,7 +84,7 @@ public partial class BookDBContext : DbContext
 
         modelBuilder.Entity<BookReview>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__BookRevi__2ECD6E04929319E5");
+            entity.HasKey(e => e.ReviewId).HasName("PK__BookRevi__2ECD6E044D6E2F9B");
 
             entity.ToTable("BookReview");
 
@@ -94,7 +98,7 @@ public partial class BookDBContext : DbContext
 
             entity.HasOne(d => d.Book).WithMany(p => p.BookReviews)
                 .HasForeignKey(d => d.BookId)
-                .HasConstraintName("FK__BookRevie__bookI__5070F446");
+                .HasConstraintName("FK__BookRevie__bookI__5165187F");
         });
 
         OnModelCreatingPartial(modelBuilder);

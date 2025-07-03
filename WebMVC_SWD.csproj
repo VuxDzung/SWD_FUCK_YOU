@@ -17,6 +17,10 @@
     <Folder Include="Components\DiscountBooks\Services\" />
     <Folder Include="Components\DiscountBooks\Views\" />
     <Folder Include="Views\ReturnRequest\" />
+    <Folder Include="Components\Accounts\" />
+    <Folder Include="Components\DiscountBooks\" />
+    <Folder Include="Components\ReturnRequests\" />
+    <Folder Include="Components\Orders\" />
   </ItemGroup>
 
   <ItemGroup>

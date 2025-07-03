@@ -1,0 +1,89 @@
+﻿@model WebMVC_SWD.Components.Books.Models.Book
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    var categories = ViewBag.Categories as List<SelectListItem>;
+}
+
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div style="color: red; font-weight: bold; margin-bottom: 10px;">
+        @ViewBag.ErrorMessage
+    </div>
+}
+else if (ViewBag.SuccessMessage != null)
+{
+    <div style="color: green; font-weight: bold; margin-bottom: 10px;">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+<form asp-action="AddBook" method="post" asp-controller="Book">
+    <div>
+        <label>Name</label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Category</label>
+        <select asp-for="CategoryId" name="CategoryId" id="CategoryId" >
+            <option value="">-- Select Category --</option>
+            @foreach (var cat in categories ?? new List<SelectListItem>())
+            {
+                var isSelected = Model?.CategoryId?.ToString() == cat.Value ? "selected" : "";
+                <option value="@cat.Value" selected="@isSelected">@cat.Text</option>
+            }
+        </select>
+        <span asp-validation-for="CategoryId" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Author</label>
+        <input asp-for="Author" />
+        <span asp-validation-for="Author" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Price</label>
+        <input asp-for="Price" />
+        <span asp-validation-for="Price" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Stock</label>
+        <input asp-for="Stock" />
+        <span asp-validation-for="Stock" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>ISBN</label>
+        <input asp-for="Isbn" />
+        <span asp-validation-for="Isbn" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Publisher</label>
+        <input asp-for="Publisher" />
+        <span asp-validation-for="Publisher" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Publication Year</label>
+        <input asp-for="PublicationYear" />
+        <span asp-validation-for="PublicationYear" style="color:red"></span>
+    </div>
+
+    <div>
+        <label>Description</label>
+        <textarea asp-for="Description"></textarea>
+        <span asp-validation-for="Description" style="color:red"></span>
+    </div>
+
+    <button type="submit">Add Book</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

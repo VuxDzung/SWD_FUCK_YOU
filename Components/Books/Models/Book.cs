@@ -25,6 +25,8 @@ public partial class Book
 
     public int? CategoryId { get; set; }
 
+    public bool IsActive { get; set; }
+
     public virtual ICollection<BookReview> BookReviews { get; set; } = new List<BookReview>();
 
     public virtual BookCategory? Category { get; set; }
