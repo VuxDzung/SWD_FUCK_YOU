@@ -6,8 +6,10 @@ namespace WebMVC_SWD.Components.Orders.Models;
 
 public partial class OrderDBContext : DbContext
 {
+    public static OrderDBContext INS = new OrderDBContext();
     public OrderDBContext()
     {
+        INS = this;
     }
 
     public OrderDBContext(DbContextOptions<OrderDBContext> options)

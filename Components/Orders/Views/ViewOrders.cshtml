@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using WebMVC_SWD.Components.Orders.Models;
+@ViewBag.Message
+<table border="1">
+	<thead>
+		<tr>
+			<th>OrderId</th>
+			<th>Customer</th>
+			<th>TotalPrice</th>
+			<th>Status</th>
+			<th>CreatedAt</th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@for (int i = 0; i < ViewBag.Orders.Count; i++)
+		{
+			Order m = ViewBag.Orders[i];
+			<tr>
+				<td>@m.OrderId</td>
+				<td>@m.CustomerId</td>
+				<td>@m.TotalPrice</td>
+				<td>@m.Status</td>
+				<td>@m.CreatedAt</td>
+				<td><a asp-controller="Orders" asp-action="Detail" asp-route-id="@m.OrderId">View Detail</a></td>
+				<td><a asp-controller="Orders" asp-action="ConfirmOrders" asp-route-orderId="@m.OrderId">Confirm Order</a></td>
+			</tr>
+		}
+	</tbody>
+</table>
