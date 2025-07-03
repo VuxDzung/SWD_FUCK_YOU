@@ -28,9 +28,6 @@ namespace WebMVC_SWD
 			builder.Services.AddDbContext<OrderDBContext>(options =>
 			options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
 
-			builder.Services.AddDbContext<ReturnRequestDBContext>(options =>
-			options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
-
 			//builder.Services.AddScoped<IBookServices, BookServices>();
 			//builder.Services.AddScoped<IOrderServices, OrderServices>();
 			#endregion

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WebMVC_SWD.Components.ReturnRequests.Models;
+namespace WebMVC_SWD.Components.Orders.Models;
 
 public partial class ReturnRequest
 {
@@ -16,4 +16,6 @@ public partial class ReturnRequest
     public string? Status { get; set; }
 
     public string? Note { get; set; }
+
+    public virtual Order? Order { get; set; }
 }
