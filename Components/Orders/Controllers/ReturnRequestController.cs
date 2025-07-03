@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebMVC_SWD.Components.Orders.Interfaces;
+using WebMVC_SWD.Components.Orders.Services;
 
 namespace WebMVC_SWD.Components.Orders.Controllers
 {
@@ -7,32 +8,47 @@ namespace WebMVC_SWD.Components.Orders.Controllers
 	{
 		private readonly IReturnRequest _requestServices;
 
-		/// <summary>
-		/// Get all requests
-		/// </summary>
-		/// <returns></returns>
+		public ReturnRequestController()
+		{
+			_requestServices = new ReturnRequestServices();
+		}
+
 		public IActionResult Index()
 		{
-			
-			return View();
+			var requests = _requestServices.GetAllRequests();
+			ViewBag.Requests = requests;
+			return View("~/Components/Orders/Views/RequestsListView.cshtml");
 		}
 
+		// POST: /ReturnRequest/Accept/5
 		[HttpPost]
-		public IActionResult CreateRequest()
+		public IActionResult Accept(int id)
 		{
-			return View();
+			_requestServices.AcceptRequest(id);
+			return RedirectToAction("Index");
 		}
 
+		// POST: /ReturnRequest/Decline/5
 		[HttpPost]
-		public IActionResult AcceptRequest()
+		public IActionResult Decline(int id)
 		{
-			return View();
+			_requestServices.DeclineRequest(id);
+			return RedirectToAction("Index");
 		}
 
-		[HttpPost]
-		public IActionResult DeclineRequest()
+		// GET: /ReturnRequest/Create
+		// [Dung] Call this in Customer's Order detail page
+		public IActionResult Create()
 		{
-			return View();
+			return View("~/Components/Orders/Views/CreateRequest.cshtml");
+		}
+
+		// POST: /ReturnRequest/Create
+		[HttpPost]
+		public IActionResult Create(int orderId, string reason, string note)
+		{
+			_requestServices.CreateRequest(orderId, reason, note);
+			return RedirectToAction("Index");
 		}
 	}
 }

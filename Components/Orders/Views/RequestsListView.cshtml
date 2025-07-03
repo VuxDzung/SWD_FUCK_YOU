@@ -1,0 +1,45 @@
+﻿@model List<ReturnRequest>
+@using WebMVC_SWD.Components.Orders.Models;
+<h2>Return Requests</h2>
+
+<table border="1" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Request ID</th>
+            <th>Order ID</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Requested Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ReturnRequest r in ViewBag.Requests)
+        {
+            <tr>
+                <td>@r.ReturnId</td>
+                <td>@r.OrderId</td>
+                <td>@r.Reason</td>
+                <td>@r.Status</td>
+                <td>@r.RequestDate?.ToString("dd-MM-yyyy")</td>
+                <td>
+                    @if (r.Status == "Pending")
+                    {
+                        <form asp-action="Accept" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@r.ReturnId" />
+                            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                        </form>
+                        <form asp-action="Decline" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@r.ReturnId" />
+                            <button type="submit" class="btn btn-danger btn-sm">Decline</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span>Not available</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -7,11 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Accounts\" />
-    <Folder Include="Components\Books\" />
-    <Folder Include="Components\DiscountBooks\" />
-    <Folder Include="Components\ReturnRequests\" />
-    <Folder Include="Components\Orders\" />
+    <Folder Include="Components\Accounts\Controllers\" />
+    <Folder Include="Components\Accounts\Services\" />
+    <Folder Include="Components\Accounts\Views\" />
+    <Folder Include="Components\Books\Controllers\" />
+    <Folder Include="Components\Books\Services\" />
+    <Folder Include="Components\Books\Views\" />
+    <Folder Include="Components\DiscountBooks\Controllers\" />
+    <Folder Include="Components\DiscountBooks\Services\" />
+    <Folder Include="Components\DiscountBooks\Views\" />
+    <Folder Include="Views\ReturnRequest\" />
   </ItemGroup>
 
   <ItemGroup>
