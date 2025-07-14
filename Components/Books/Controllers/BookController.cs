@@ -29,14 +29,21 @@ namespace WebMVC_SWD.Components.Books.Controllers
         {
             ViewBag.Categories = _categoryService.GetCategorySelectList();
 
-            if (!ModelState.IsValid)
+            var validationResult = _bookService.ValidateInput(book);
+            if (!validationResult.IsValid)
             {
-                ViewBag.ErrorMessage = "Invalid input!";
-                return View(book); // Tự động tìm đúng View
+                ViewBag.ErrorMessage = validationResult.ErrorMessage;
+                return View(book);
+            }
+
+            var checkDuplicateResult = _bookService.CheckDuplicateForAdd(book);
+            if (!checkDuplicateResult.IsValid)
+            {
+                ViewBag.ErrorMessage = checkDuplicateResult.ErrorMessage;
+                return View(book);
             }
 
             var result = _bookService.AddBook(book);
-
             if (!result)
             {
                 ViewBag.ErrorMessage = "Duplicate book name!";
@@ -61,7 +68,28 @@ namespace WebMVC_SWD.Components.Books.Controllers
         [Route("Book/Delete/{id}")]
         public IActionResult Delete(int id)
         {
-            var result = _bookService.SoftDeleteBook(id);
+            var book = _bookService.GetBookById(id);
+            if (book == null)
+            {
+                ViewBag.ErrorMessage = "Book not found!";
+                return View("ListBooks", _bookService.GetAllBooks());
+            }
+
+            var validationResult = _bookService.ValidateInput(book);
+            if (!validationResult.IsValid)
+            {
+                ViewBag.ErrorMessage = validationResult.ErrorMessage;
+                return View("ListBooks", _bookService.GetAllBooks());
+            }
+
+            var deleteResult = _bookService.SoftDeleteBook(id);
+            if (!deleteResult)
+            {
+                ViewBag.ErrorMessage = "Delete failed!";
+                return View("ListBooks", _bookService.GetAllBooks());
+            }
+
+            ViewBag.SuccessMessage = "Book deleted successfully!";
             return RedirectToAction("ListBooks");
         }
 
@@ -73,7 +101,7 @@ namespace WebMVC_SWD.Components.Books.Controllers
             if (book == null) return NotFound();
 
             ViewBag.Categories = _categoryService.GetCategorySelectList();
-            return View("UpdateBook", book); // view mới
+            return View("UpdateBook", book);
         }
 
         [HttpPost]
@@ -82,14 +110,22 @@ namespace WebMVC_SWD.Components.Books.Controllers
         {
             ViewBag.Categories = _categoryService.GetCategorySelectList();
 
-            if (!ModelState.IsValid)
+            var validationResult = _bookService.ValidateInput(updatedBook);
+            if (!validationResult.IsValid)
             {
-                ViewBag.ErrorMessage = "Invalid input!";
+                ViewBag.ErrorMessage = validationResult.ErrorMessage;
                 return View("UpdateBook", updatedBook);
             }
 
-            var result = _bookService.UpdateBook(id, updatedBook);
-            if (!result)
+            var duplicateResult = _bookService.CheckDuplicate(id, updatedBook);
+            if (!duplicateResult.IsValid)
+            {
+                ViewBag.ErrorMessage = duplicateResult.ErrorMessage;
+                return View("UpdateBook", updatedBook);
+            }
+
+            var updateResult = _bookService.UpdateBook(id, updatedBook);
+            if (!updateResult)
             {
                 ViewBag.ErrorMessage = "Update failed!";
             }
@@ -100,7 +136,5 @@ namespace WebMVC_SWD.Components.Books.Controllers
 
             return View("UpdateBook", updatedBook);
         }
-
-
     }
 }

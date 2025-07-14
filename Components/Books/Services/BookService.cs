@@ -9,16 +9,38 @@ namespace WebMVC_SWD.Components.Books.Services
 
         public BookService(BookDBContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+        public (bool IsValid, string ErrorMessage) CheckDuplicate(int id, Book updated)
+        {
+            var inputValidation = ValidateInput(updated);
+            if (!inputValidation.IsValid)
+                return inputValidation;
+
+            var existing = _context.Books.FirstOrDefault(b => b.Name == updated.Name && b.Author == updated.Author && b.BookId != id);
+            if (existing != null)
+                return (false, "Duplicate book name and author!");
+            return (true, string.Empty);
+        }
+
+        public (bool IsValid, string ErrorMessage) ValidateInput(Book book)
+        {
+            if (book == null)
+                return (false, "Book object is null!");
+            if (string.IsNullOrWhiteSpace(book.Name))
+                return (false, "Book name is required!");
+            if (string.IsNullOrWhiteSpace(book.Author))
+                return (false, "Author is required!");
+            if (book.Price < 0)
+                return (false, "Price cannot be negative!");
+            if (book.Stock < 0)
+                return (false, "Stock cannot be negative!");
+            return (true, string.Empty);
+        }
+
 
         public bool AddBook(Book book)
         {
-            // Check duplicate
-            var existing = _context.Books.FirstOrDefault(b => b.Name == book.Name);
-            if (existing != null)
-                return false;
-
             _context.Books.Add(book);
             _context.SaveChanges();
             return true;
@@ -46,6 +68,17 @@ namespace WebMVC_SWD.Components.Books.Services
             return _context.Books
                 .Include(b => b.Category)
                 .FirstOrDefault(b => b.BookId == id && b.IsActive);
+        }
+        public (bool IsValid, string ErrorMessage) CheckDuplicateForAdd(Book book)
+        {
+            var inputValidation = ValidateInput(book);
+            if (!inputValidation.IsValid)
+                return inputValidation;
+
+            var existing = _context.Books.FirstOrDefault(b => b.Name == book.Name && b.Author == book.Author);
+            if (existing != null)
+                return (false, "Duplicate book");
+            return (true, string.Empty);
         }
 
 
