@@ -3,7 +3,7 @@ using WebMVC_SWD.Components.Books.Models;
 
 namespace WebMVC_SWD.Components.Books.Services
 {
-    public class BookService
+    public class BookService : IBookService
     {
         private readonly BookDBContext _context;
 
@@ -11,6 +11,7 @@ namespace WebMVC_SWD.Components.Books.Services
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+
         public (bool IsValid, string ErrorMessage) CheckDuplicate(int id, Book updated)
         {
             var inputValidation = ValidateInput(updated);
@@ -38,13 +39,13 @@ namespace WebMVC_SWD.Components.Books.Services
             return (true, string.Empty);
         }
 
-
         public bool AddBook(Book book)
         {
             _context.Books.Add(book);
             _context.SaveChanges();
             return true;
         }
+
         public List<Book> GetAllBooks()
         {
             return _context.Books
@@ -69,6 +70,7 @@ namespace WebMVC_SWD.Components.Books.Services
                 .Include(b => b.Category)
                 .FirstOrDefault(b => b.BookId == id && b.IsActive);
         }
+
         public (bool IsValid, string ErrorMessage) CheckDuplicateForAdd(Book book)
         {
             var inputValidation = ValidateInput(book);
@@ -80,7 +82,6 @@ namespace WebMVC_SWD.Components.Books.Services
                 return (false, "Duplicate book");
             return (true, string.Empty);
         }
-
 
         public bool UpdateBook(int id, Book updated)
         {
@@ -99,6 +100,5 @@ namespace WebMVC_SWD.Components.Books.Services
             _context.SaveChanges();
             return true;
         }
-
     }
 }

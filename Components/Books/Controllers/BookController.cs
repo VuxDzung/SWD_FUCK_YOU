@@ -6,13 +6,13 @@ namespace WebMVC_SWD.Components.Books.Controllers
 {
     public class BookController : Controller
     {
-        private readonly BookService _bookService;
-        private readonly CategoryService _categoryService;
+        private readonly IBookService _bookService;
+        private readonly ICategoryService _categoryService;
 
-        public BookController(BookService bookService, CategoryService categoryService)
+        public BookController(IBookService bookService, ICategoryService categoryService)
         {
-            _bookService = bookService;
-            _categoryService = categoryService;
+            _bookService = bookService ?? throw new ArgumentNullException(nameof(bookService));
+            _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
         }
 
         [HttpGet]
@@ -20,7 +20,7 @@ namespace WebMVC_SWD.Components.Books.Controllers
         public IActionResult AddBook()
         {
             ViewBag.Categories = _categoryService.GetCategorySelectList();
-            return View(); // Tự động tìm Views/Book/AddBook.cshtml
+            return View();
         }
 
         [HttpPost]
@@ -61,7 +61,7 @@ namespace WebMVC_SWD.Components.Books.Controllers
         public IActionResult ListBooks()
         {
             var books = _bookService.GetAllBooks();
-            return View(books); // View: Views/Book/ListBooks.cshtml
+            return View(books);
         }
 
         [HttpGet]
